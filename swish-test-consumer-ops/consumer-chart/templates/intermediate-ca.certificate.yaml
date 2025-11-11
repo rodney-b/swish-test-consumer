@@ -7,7 +7,7 @@ metadata:
     "helm.sh/hook-weight": "-3"
 spec:
   isCA: true
-  commonName: identity.swish-analytics-test.consumer.kluster.lan
+  commonName: identity.swish-analytics-test.consumer.swishkube.lan
   secretName: {{ .Values.cert.caSecret }}
   privateKey:
     algorithm: ECDSA
@@ -16,6 +16,6 @@ spec:
   duration: 8760h # 12 months
   renewBefore: 6570h # 9 months
   issuerRef:
-    name: kluster-root-ca
+    name: swishkube-root-ca
     kind: ClusterIssuer
     group: cert-manager.io

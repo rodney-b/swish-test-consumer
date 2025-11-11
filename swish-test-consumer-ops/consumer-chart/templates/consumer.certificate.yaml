@@ -6,7 +6,7 @@ metadata:
     "helm.sh/hook": pre-install
     "helm.sh/hook-weight": "-1"
 spec:
-  commonName: identity.swish-test-consumer.swish-analytics.kluster.lan
+  commonName: identity.swish-test-consumer.swish-analytics.swishkube.lan
   subject:
     organizations:
       - swish-analytics

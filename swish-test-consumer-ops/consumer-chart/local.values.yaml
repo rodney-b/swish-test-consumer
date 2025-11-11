@@ -5,4 +5,4 @@ image:
 stage: local
 
 nodeSelector:
-  kluster.node.type: system-services
+  swishkube.node.type: system-services

@@ -59,7 +59,7 @@ messageQueue:
 
 otel:
   stdoutExporterEnabled: false
-  httpReceiverURL: "kluster-otel-collector.kluster-observability-privileged.svc.cluster.local:4318"
+  httpReceiverURL: "swishkube-otel-collector.swishkube-observability-privileged.svc.cluster.local:4318"
 
 resources:
   limits:
