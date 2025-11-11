@@ -7,3 +7,6 @@ Build and deployment is done automatically upon pushing changes to the `main` br
 
 ### Under the hood
 Configuration and deployment of the consumer is done using [Helm charts](https://helm.sh/docs).
+
+### Local deployment
+If deploying locally, a skaffold.yaml and env template is provided for convenience. Skaffold overlays [local.values.yaml](swish-test-consumer-ops/consumer-chart/charts/local.values.yaml) over the default [values.yaml](swish-test-consumer-ops/consumer-chart/values.yaml) so any configuration changes to the values file can go here.

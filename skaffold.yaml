@@ -1,0 +1,33 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: consumer
+build:
+  tagPolicy:
+    sha256: {}
+  local:
+    push: true
+    useBuildkit: true
+    concurrency: 1
+  artifacts:
+    - image: swish-test/consumer
+      context: .
+      platforms:
+        - "linux/amd64"
+      docker:
+        dockerfile: build/package/consumer/Dockerfile
+deploy:
+  helm:
+    releases:
+      - name: swish-consumer
+        chartPath: swish-test-consumer-ops/consumer-chart
+        namespace: "{{ .APP_NAMESPACE }}"
+        valuesFiles:
+          - swish-test-consumer-ops/consumer-chart/values.yaml
+          - swish-test-consumer-ops/consumer-chart/local.values.yaml
+        setValueTemplates:
+          image.repository: "{{.IMAGE_swish_test_consumer}}"
+          image.tag: "{{.IMAGE_TAG_swish_test_consumer}}"
+    flags:
+      upgrade:
+        - --install
