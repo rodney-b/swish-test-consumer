@@ -3,8 +3,8 @@ kind: Certificate
 metadata:
   name: {{ include "consumer-chart.name" . }}-client-cert
   annotations:
-        "helm.sh/hook": pre-install
-        "helm.sh/hook-weight": "-1"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-1"
 spec:
   commonName: identity.swish-test-consumer.swish-analytics.kluster.lan
   subject:
