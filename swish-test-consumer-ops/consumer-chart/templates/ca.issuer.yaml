@@ -2,6 +2,9 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: {{ .Values.cert.issuer }}
+  annotations:
+        "helm.sh/hook": pre-install
+        "helm.sh/hook-weight": "-2"
 spec:
   ca:
     secretName: {{ .Values.cert.caSecret }}
