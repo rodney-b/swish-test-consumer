@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+# OIDC permissions
+permissions:
+  id-token: write 
+  contents: read
+
+env:
+  APP_NAME: "consumer"
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.IAM_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          file: build/package/consumer/Dockerfile
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ secrets.IMAGE_REPO }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ secrets.IMAGE_REPO }}/${{ env.APP_NAME }}:latest

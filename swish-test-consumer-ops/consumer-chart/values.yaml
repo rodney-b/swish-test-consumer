@@ -1,0 +1,103 @@
+replicaCount: 1
+
+nameOverride: &name "swish-test-consumer"
+fullnameOverride: *name
+
+image:
+  repository: swish-test-consumer
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+
+stage: production
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: *name
+
+podAnnotations:
+  linkerd.io/inject: "disabled"
+
+podLabels:
+  app.swish-test/consumer: *name
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsGroup: 1000
+  runAsUser: 1000
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+      - ALL
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: "OnRootMismatch"
+
+podSpec:
+  restartPolicy: OnFailure
+
+cert:
+  issuer: swish-test-consumer-issuer
+  caSecret: swish-test-consumer-intermediate-ca-tls
+  leafSecret: swish-test-consumer-tls
+
+messageQueue:
+  clientCertSecret: swishy
+  brokerCertSecret: kafka-broker-tls
+  topics:
+    - data-set-1
+    - data-set-2
+  url: swish-analytics-kafka-brokers.swish-analytics.svc.cluster.local:9093
+  groupID: swish-test-consumer-group
+
+otel:
+  stdoutExporterEnabled: false
+  httpReceiverURL: "kluster-otel-collector.kluster-observability-privileged.svc.cluster.local:4318"
+
+resources:
+  limits:
+    memory: 512Mi
+  requests:
+    cpu: 20m
+    memory: 64Mi
+
+livenessProbe:
+  grpc:
+    port: &healthcheckPort 50051
+    service: swish-test-consumer-liveness
+  initialDelaySeconds: 20
+
+readinessProbe:
+  grpc:
+    port: *healthcheckPort
+    service: swish-test-consumer-readiness
+  initialDelaySeconds: 30
+
+# Not bothering to use a readiness probe for a job but
+# in the real world instead of a job I would use a deployment.
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

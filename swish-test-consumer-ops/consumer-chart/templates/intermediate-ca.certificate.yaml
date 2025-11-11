@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "consumer-chart.name" . }}-ca
+spec:
+  isCA: true
+  commonName: identity.swish-analytics-test.consumer.kluster.lan
+  secretName: {{ .Values.cert.caSecret }}
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  duration: 8760h # 12 months
+  renewBefore: 6570h # 9 months
+  issuerRef:
+    name: kluster-root-ca
+    kind: ClusterIssuer
+    group: cert-manager.io

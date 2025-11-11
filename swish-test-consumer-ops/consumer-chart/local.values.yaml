@@ -1,0 +1,8 @@
+
+image:
+  repository: tinysrvr.bumpow.lan:5000/swish-test/consumer
+
+stage: local
+
+nodeSelector:
+  kluster.node.type: system-services

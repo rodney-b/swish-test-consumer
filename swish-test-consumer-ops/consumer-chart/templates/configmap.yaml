@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "consumer-chart.name" . }}
+  labels:
+    {{- include "consumer-chart.labels" . | nindent 4 }}
+data:
+  {{- with .Values }}
+  APP_NAME: {{ include "consumer-chart.name" $ }}
+  MESSAGE_QUEUE_TOPICS: {{ join "," .messageQueue.topics | quote }}
+  MESSAGE_QUEUE_URL: {{ .messageQueue.url }}
+  MESSAGE_QUEUE_GROUP_ID: {{ .messageQueue.groupID | quote }}
+  OTEL_STDOUT_EXPORTER_ENABLED: {{ .otel.stdoutExporterEnabled | quote }}
+  OTEL_HTTP_RECEIVER_URL: {{ .otel.httpReceiverURL | quote }}
+  HEALTHCHECK_PORT: {{ .livenessProbe.grpc.port | quote }}
+  HEALTHCHECK_SERVICE_PREFIX: {{ include "consumer-chart.name" $ }}
+  STAGE: {{ .stage }}
+  {{- end }}
