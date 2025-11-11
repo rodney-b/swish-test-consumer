@@ -1,8 +1,0 @@
-
-image:
-  repository: tinysrvr.bumpow.lan:5000/swish-test/consumer
-
-stage: local
-
-nodeSelector:
-  swishkube.node.type: system-services
