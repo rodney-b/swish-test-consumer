@@ -58,8 +58,6 @@ func consume(ctx context.Context, cp config.ConfigProvider, log *slog.Logger, te
 		return errors.Join(errors.New("error pinging kafka client"), err)
 	}
 
-	log.Debug("message queue", "topics", cp.GetMessageQueueTopics()) // The publisher already logs all messages at info level
-
 	for {
 		fetches := kafkaClient.PollFetches(ctx)
 
